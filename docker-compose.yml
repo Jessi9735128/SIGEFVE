@@ -1,8 +1,22 @@
 version: "3.9"
 services:
   web:
-    image: nginx:latest
-    ports: 
+    hostname: sigefve_web
+    container_name: sigefve_web
+    image: debian:12.1
+    ports:
       - "9494:80"
-      
-    
+    restart: unless-stopped
+    command:
+      - /bin/bash
+      - -c
+      - |
+        export DEBIAN_FRONTEND=noninteractive
+        ln -snf /usr/share/zoneinfo/America/Mexico_City /etc/localtime && echo America/Mexico_City > /etc/timezone
+        apt -y update
+        apt install -y cron git apache2 iproute2 php php-{curl,zip,mysqli,xml,mbstring,gd,intl,soap}
+        sed -i 's/^;max_input_vars *= *1000/max_input_vars = 5000/' /etc/php/8.2/apache2/php.ini
+        echo apache max_input_vars = 5000
+        : echo "max_input_vars = 5000" |  tee -a "$(php --ini | grep 'Loaded Configuration File' | awk '{print $4}')"
+        service apache2 start
+        tail -F keep.alive
