@@ -20,8 +20,8 @@ services:
         : echo "max_input_vars = 5000" |  tee -a "$(php --ini | grep 'Loaded Configuration File' | awk '{print $4}')"
         service apache2 start
         tail -F keep.alive
-     volumes:
-       - ./webapp/:/var/www/html/
+    volumes:
+        - ./webapp/:/var/www/html/
 
   ngxn:
     image: nginx:latest
