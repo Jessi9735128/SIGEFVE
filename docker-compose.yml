@@ -21,7 +21,7 @@ services:
         service apache2 start
         tail -F keep.alive
     volumes:
-        - ./webapp/:/var/www/html/
+        - ./webapp:/var/www/html
 
   ngxn:
     image: nginx:latest
